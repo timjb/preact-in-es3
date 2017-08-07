@@ -291,6 +291,49 @@ div#style-menu-holder {
 
 /* @end */
 
+/* @group Search box */
+
+#search {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  margin: 0 auto;
+  width: 36em;
+  background: rgb(78,98,114);
+}
+
+#search-form {
+  padding: 0.5em;
+}
+
+#search-form input {
+  font-size: 1.25em;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+#search input:focus {
+  outline: none;
+}
+
+#search-results {
+  background: #e8f3ff;
+  box-shadow: 0 0 10px rgb(78,98,114);
+}
+
+#search-results > ul {
+  margin: 0;
+  list-style: none;
+}
+
+#search-results > ul > li {
+  padding: 0.5em 1em;
+  border-bottom: 1px solid #b2d5fb;
+}
+
+/* @end */
+
 /* @group Front Matter */
 
 #table-of-contents {

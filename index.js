@@ -65,16 +65,21 @@ var App = createClass({
       return h(Item, item);
     });
     return (
-      h('div', null,
-        h('input', {
-          onInput: function(e) {
-            self.setState({
-              result: state.fuse.search(e.target.value)
-            });
-          }
-        }),
-        h('ul', null,
-          items
+      h('div', { id: 'search' },
+        h('div', { id: 'search-form' },
+          h('input', {
+            placeholder: "Search by name",
+            onInput: function(e) {
+              self.setState({
+                result: state.fuse.search(e.target.value)
+              });
+            }
+          }),
+        ),
+        h('div', { id: 'search-results' },
+          h('ul', null,
+            items
+          )
         )
       )
     );
