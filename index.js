@@ -17,8 +17,7 @@ function createClass(obj) {
   return p.constructor = F;
 }
 
-function loadJSON(path, success, error)
-{
+function loadJSON(path, success, error) {
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function()
   {
@@ -48,36 +47,62 @@ var App = createClass({
     var self = this;
     self.setState({
       hasFocus: false,
-      result: []
+      moduleResults: []
     });
     loadJSON("doc-index.json", function(data) {
       self.setState({
         fuse: new Fuse(data, {
           threshold: 0.4,
           caseSensitive: true,
+          includeScore: true,
           keys: ["name"]
         }),
-        result: []
+        moduleResults: []
       });
     }, function (err) {
       if (console) {
         console.error("could not load 'doc-index.json' for searching", err);
       }
       self.setState({
-        result: []
+        moduleResults: []
       });
     });
   },
+
+  updateResults: function(searchString) {
+    var results = this.state.fuse.search(searchString)
+
+    var resultsByModule = {};
+
+    results.forEach(function(result) {
+      var moduleName = result.item.module;
+      var resultsInModule = resultsByModule[moduleName] || (resultsByModule[moduleName] = []);
+      resultsInModule.push(result);
+    });
+
+    var moduleResults = [];
+    for (var moduleName in resultsByModule) {
+      var items = resultsByModule[moduleName];
+      var sumOfInverseScores = 0;
+      items.forEach(function(item) { sumOfInverseScores += 1/item.score; });
+      moduleResults.push({ module: moduleName, totalScore: 1/sumOfInverseScores, items: items });
+    }
+
+    moduleResults.sort(function(a, b) { return a.totalScore - b.totalScore; });
+
+    this.setState({ moduleResults: moduleResults });
+  },
+
   render: function(props, state) {
     var self = this;
-    var items = take(20, state.result).map(function(item) {
-      return h(Item, item);
+    var items = take(10, state.moduleResults).map(function(resultsInModule) {
+      return h(ResultsInModule, resultsInModule);
     });
     return (
       h('div', { id: 'search' },
         h('div', { id: 'search-form' },
           h('input', {
-            placeholder: "Search by name",
+            placeholder: "Search in package by name",
             onBlur: function(e) {
               self.setState({ hasFocus: false });
             },
@@ -85,9 +110,7 @@ var App = createClass({
               self.setState({ hasFocus: true });
             },
             onInput: function(e) {
-              self.setState({
-                result: state.fuse.search(e.target.value)
-              });
+              self.updateResults(e.target.value);
             }
           }),
         ),
@@ -102,6 +125,17 @@ var App = createClass({
   }
 });
 
+var ResultsInModule = function(props) {
+  return h('li', null,
+    h('p', null, props.module),
+    h('ul', null,
+      take(8, props.items).map(function(item) { return h(Item, item.item); })
+    ),
+    props.items.length > 8 ?
+      h('p', null, "(more results on module page)") : null
+  )
+};
+
 var Item = function(props) {
   return (
     h('li', null,
@@ -109,6 +143,6 @@ var Item = function(props) {
       h('div', {dangerouslySetInnerHTML: {__html: props.display_html}})
     )
   );
-}
+};
 
 preact.render(h(App), document.body);
