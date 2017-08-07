@@ -65,7 +65,7 @@ var App = createClass({
       return h(Item, item);
     });
     return (
-      h('app', null,
+      h('div', null,
         h('input', {
           onInput: function(e) {
             self.setState({
