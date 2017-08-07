@@ -98,6 +98,7 @@ var App = createClass({
     var items = take(10, state.moduleResults).map(function(resultsInModule) {
       return h(ResultsInModule, resultsInModule);
     });
+    var stopPropagation = function(e) { e.preventDefault(); };
     return (
       h('div', { id: 'search' },
         h('div', { id: 'search-form' },
@@ -115,7 +116,7 @@ var App = createClass({
           }),
         ),
         state.hasFocus ?
-          h('div', { id: 'search-results' },
+          h('div', { id: 'search-results', onMouseDown: stopPropagation },
             h('ul', null,
               items
             )
