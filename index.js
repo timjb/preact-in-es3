@@ -38,6 +38,11 @@ function loadJSON(path, success, error)
 
 // -------------------------------------------------------------------------- //
 
+function take(n, arr) {
+  if (arr.length <= n) { return arr; }
+  return arr.slice(0, n);
+}
+
 var App = createClass({
   componentWillMount: function() {
     var self = this;
@@ -65,7 +70,7 @@ var App = createClass({
   },
   render: function(props, state) {
     var self = this;
-    var items = state.result.map(function(item) {
+    var items = take(20, state.result).map(function(item) {
       return h(Item, item);
     });
     return (
@@ -86,7 +91,7 @@ var App = createClass({
             }
           }),
         ),
-        this.state.hasFocus ?
+        state.hasFocus ?
           h('div', { id: 'search-results' },
             h('ul', null,
               items
