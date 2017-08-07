@@ -42,6 +42,7 @@ var App = createClass({
   componentWillMount: function() {
     var self = this;
     self.setState({
+      hasFocus: false,
       result: []
     });
     loadJSON("doc-index.json", function(data) {
@@ -54,6 +55,9 @@ var App = createClass({
         result: []
       });
     }, function (err) {
+      if (console) {
+        console.error("could not load 'doc-index.json' for searching", err);
+      }
       self.setState({
         result: []
       });
@@ -69,6 +73,12 @@ var App = createClass({
         h('div', { id: 'search-form' },
           h('input', {
             placeholder: "Search by name",
+            onBlur: function(e) {
+              self.setState({ hasFocus: false });
+            },
+            onFocus: function(e) {
+              self.setState({ hasFocus: true });
+            },
             onInput: function(e) {
               self.setState({
                 result: state.fuse.search(e.target.value)
@@ -76,11 +86,12 @@ var App = createClass({
             }
           }),
         ),
-        h('div', { id: 'search-results' },
-          h('ul', null,
-            items
-          )
-        )
+        this.state.hasFocus ?
+          h('div', { id: 'search-results' },
+            h('ul', null,
+              items
+            )
+          ) : null
       )
     );
   }
