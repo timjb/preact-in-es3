@@ -1,66 +1,93 @@
 // alias preact's hyperscript reviver since it's referenced a lot:
 var h = preact.h;
 
-
-// To use Classful Components in ES3/5, use your favorite inheritance technique.
-// If you don't intend to use the Component class, you can skip this.
-// Here's an example:
 function createClass(obj) {
-	// sub-class Component:
-	function F(){ preact.Component.call(this); }
-	var p = F.prototype = new preact.Component;
-	// copy our skeleton into the prototype:
-	for (var i in obj) {
-            if (i === 'getDefaultProps' && typeof obj.getDefaultProps === 'function') {
-                F.defaultProps = obj.getDefaultProps() || {};
-            } else {
-                p[i] = obj[i];
-            }
-        }
-	// restore constructor:
-	return p.constructor = F;
+  // sub-class Component:
+  function F(){ preact.Component.call(this); }
+  var p = F.prototype = new preact.Component;
+  // copy our skeleton into the prototype:
+  for (var i in obj) {
+    if (i === 'getDefaultProps' && typeof obj.getDefaultProps === 'function') {
+      F.defaultProps = obj.getDefaultProps() || {};
+    } else {
+      p[i] = obj[i];
+    }
+  }
+  // restore constructor:
+  return p.constructor = F;
 }
 
+function loadJSON(path, success, error)
+{
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function()
+  {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {
+        if (success)
+          success(JSON.parse(xhr.responseText));
+      } else {
+        if (error)
+          error(xhr);
+      }
+    }
+  };
+  xhr.open("GET", path, true);
+  xhr.send();
+}
 
+// -------------------------------------------------------------------------- //
 
-/** Example classful component */
 var App = createClass({
-	componentDidMount: function() {
-		this.setState({ message:'Hello!' });
-	},
-	render: function(props, state) {
-		return (
-			h('div', {id:'app'},
-				h(Header, { message: state.message }),
-				h(Main)
-			)
-		);
-	}
+  componentWillMount: function() {
+    var self = this;
+    self.setState({
+      result: []
+    });
+    loadJSON("doc-index.json", function(data) {
+      self.setState({
+        fuse: new Fuse(data, {
+          threshold: 0.4,
+          caseSensitive: true,
+          keys: ["name"]
+        }),
+        result: []
+      });
+    }, function (err) {
+      self.setState({
+        result: []
+      });
+    });
+  },
+  render: function(props, state) {
+    var self = this;
+    var items = state.result.map(function(item) {
+      return h(Item, item);
+    });
+    return (
+      h('app', null,
+        h('input', {
+          onInput: function(e) {
+            self.setState({
+              result: state.fuse.search(e.target.value)
+            });
+          }
+        }),
+        h('ul', null,
+          items
+        )
+      )
+    );
+  }
 });
 
-
-/** Components can just be pure functions */
-var Header = function(props) {
-	return h('header', null,
-		h('h1', null, 'App'),
-		props.message ? h('h2',null,props.message) : null
-	);
+var Item = function(props) {
+  return (
+    h('li', null,
+      h('div', null, h('b', null, props.name)),
+      h('div', {dangerouslySetInnerHTML: {__html: props.display_html}})
+    )
+  );
 }
-
-
-/** Instead of JSX, use: h(type, props, ...children) */
-var Main = createClass({
-	render: function() {
-		var items = [1,2,3,4,5].map( function(item) {
-			return h('li', {id:item}, 'Item '+item);
-		});
-		return (
-			h('main', null,
-				h('ul', null, items)
-			)
-		);
-	}
-});
-
 
 preact.render(h(App), document.body);
