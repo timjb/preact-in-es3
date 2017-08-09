@@ -354,7 +354,7 @@ div#style-menu-holder {
   padding: 0.25em 0.5em;
 }
 
-.search-module > ul > li > a[href]:hover {
+.search-module > ul > li > a[href].active-link {
   background: #faf9dc;
 }
 
