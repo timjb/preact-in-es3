@@ -37,7 +37,7 @@ dd {
 }
 
 a { text-decoration: none; }
-a[href]:link { color: rgb(196,69,29); }
+a[href]:link {color: rgb(196,69,29);}
 a[href]:visited { color: rgb(171,105,84); }
 a[href]:hover { text-decoration:underline; }
 
@@ -331,8 +331,31 @@ div#style-menu-holder {
   padding: 0.5em 1em;
   margin: 0;
 }
+
 #search-results > ul > li {
   border-bottom: 1px solid #b2d5fb;
+}
+
+#search-results > ul > li > ul {
+  list-style: none;
+}
+
+.search-result > a[href] {
+  display: block;
+  color: inherit;
+  padding: 0.25em 0.5em;
+}
+
+.search-result > a[href]:hover {
+  background: #faf9dc;
+}
+
+.search-result a[href]:hover {
+  text-decoration: none;
+}
+
+.search-result a a {
+  pointer-events: none;
 }
 
 /* @end */

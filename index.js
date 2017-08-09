@@ -178,9 +178,11 @@ var ResultsInModule = function(props) {
 
 var Item = function(props) {
   return (
-    h('li', null,
-      h('div', null, h('b', null, props.name)),
-      h('div', {dangerouslySetInnerHTML: {__html: props.display_html}})
+    h('li', { class: 'search-result' },
+      h('a', { href: '#TODO' },
+        h('div', null, h('b', null, props.name)),
+        h('div', {dangerouslySetInnerHTML: {__html: props.display_html}})
+      )
     )
   );
 };
