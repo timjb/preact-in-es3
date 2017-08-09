@@ -71,6 +71,8 @@ var App = createClass({
     document.addEventListener('mousedown', this.hide.bind(this));
 
     document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') { self.hide(); }
+
       if (e.target.tagName.toLowerCase() === 'input') { return; }
 
       if (e.key === 's') {
@@ -114,12 +116,6 @@ var App = createClass({
     this.setState({ searchString: searchString, isVisible: true, moduleResults: moduleResults });
   },
 
-  onKeydown: function(e) {
-    if (e.key == 'Escape') {
-      this.hide();
-    }
-  },
-
   render: function(props, state) {
     if (state.failedLoading) { return null; }
 
@@ -136,7 +132,6 @@ var App = createClass({
             ref: function(input) { self.input = input; },
             onFocus: this.show.bind(this),
             onClick: this.show.bind(this),
-            onKeydown: this.onKeydown.bind(this),
             onInput: function(e) {
               self.updateResults(e.target.value);
             }
@@ -168,7 +163,7 @@ var App = createClass({
     }.bind(this);
 
     return h('li', { class: 'search-module' },
-      h('p', null, moduleName),
+      h('h4', null, moduleName),
       h('ul', null,
         visibleItems.map(function(item) { return h(Item, item.item); }),
         showAll
@@ -184,7 +179,7 @@ var App = createClass({
 
 var IntroMsg = function() {
   return h('p', null,
-    "You can find any type, constructor, class, function or pattern defined in this package by (approximate) name. Press ",
+    "You can find any exported type, constructor, class, function or pattern defined in this package by (approximate) name. Press ",
     h('span', { class: 'key' }, "s"),
     " to bring up this search box."
   );
@@ -213,7 +208,6 @@ var Item = function(props) {
   return (
     h('li', { class: 'search-result' },
       h('a', { href: '#TODO' },
-        h('div', null, h('b', null, props.name)),
         h('div', {dangerouslySetInnerHTML: {__html: props.display_html}})
       )
     )

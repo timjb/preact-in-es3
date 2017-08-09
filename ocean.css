@@ -340,6 +340,14 @@ div#style-menu-holder {
   list-style: none;
 }
 
+.search-module h4 {
+  margin: 0;
+}
+
+.search-module > ul {
+  margin: 0.5em 0 0.5em 2em;
+}
+
 .search-module > ul > li > a[href] {
   display: block;
   color: inherit;
