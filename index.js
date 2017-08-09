@@ -46,7 +46,7 @@ var App = createClass({
   componentWillMount: function() {
     var self = this;
     self.setState({
-      hasFocus: false,
+      isVisible: false,
       moduleResults: []
     });
     loadJSON("doc-index.json", function(data) {
@@ -67,6 +67,12 @@ var App = createClass({
         moduleResults: []
       });
     });
+
+    document.addEventListener('mousedown', this.hide.bind(this));
+  },
+
+  hide: function() {
+    this.setState({ isVisible: false });
   },
 
   updateResults: function(searchString) {
@@ -90,7 +96,13 @@ var App = createClass({
 
     moduleResults.sort(function(a, b) { return a.totalScore - b.totalScore; });
 
-    this.setState({ moduleResults: moduleResults });
+    this.setState({ isVisible: true, moduleResults: moduleResults });
+  },
+
+  onKeydown: function(e) {
+    if (e.key == 'Escape') {
+      this.setState({ isVisible: false });
+    }
   },
 
   render: function(props, state) {
@@ -98,25 +110,23 @@ var App = createClass({
     var items = take(10, state.moduleResults).map(function(resultsInModule) {
       return h(ResultsInModule, resultsInModule);
     });
-    var stopPropagation = function(e) { e.preventDefault(); };
+    var stopPropagation = function(e) { e.stopPropagation(); };
     return (
-      h('div', { id: 'search' },
+      h('div', { id: 'search', onMouseDown: stopPropagation },
         h('div', { id: 'search-form' },
           h('input', {
             placeholder: "Search in package by name",
-            onBlur: function(e) {
-              self.setState({ hasFocus: false });
-            },
             onFocus: function(e) {
-              self.setState({ hasFocus: true });
+              self.setState({ isVisible: true });
             },
+            onKeydown: this.onKeydown.bind(this),
             onInput: function(e) {
               self.updateResults(e.target.value);
             }
           }),
         ),
-        state.hasFocus ?
-          h('div', { id: 'search-results', onMouseDown: stopPropagation },
+        state.isVisible ?
+          h('div', { id: 'search-results' },
             h('ul', null,
               items
             )
