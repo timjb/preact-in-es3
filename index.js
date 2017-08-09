@@ -69,6 +69,17 @@ var App = createClass({
     });
 
     document.addEventListener('mousedown', this.hide.bind(this));
+
+    document.addEventListener('keydown', function(e) {
+      if (e.target.tagName.toLowerCase() === 'input') { return; }
+
+      if (e.key === 's') {
+        if (self.input) {
+          self.input.focus();
+          e.preventDefault();
+        }
+      }
+    })
   },
 
   hide: function() {
@@ -122,6 +133,7 @@ var App = createClass({
         h('div', { id: 'search-form' },
           h('input', {
             placeholder: "Search in package by name",
+            ref: function(input) { self.input = input; },
             onFocus: this.show.bind(this),
             onClick: this.show.bind(this),
             onKeydown: this.onKeydown.bind(this),
@@ -172,7 +184,9 @@ var App = createClass({
 
 var IntroMsg = function() {
   return h('p', null,
-    "You can find any type, constructor, class, function or pattern defined in this package by (approximate) name."
+    "You can find any type, constructor, class, function or pattern defined in this package by (approximate) name. Press ",
+    h('span', { class: 'key' }, "s"),
+    " to bring up this search box."
   );
 };
 
