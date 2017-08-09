@@ -46,6 +46,7 @@ var App = createClass({
   componentWillMount: function() {
     var self = this;
     self.setState({
+      searchString: '',
       isVisible: false,
       moduleResults: []
     });
@@ -96,7 +97,7 @@ var App = createClass({
 
     moduleResults.sort(function(a, b) { return a.totalScore - b.totalScore; });
 
-    this.setState({ isVisible: true, moduleResults: moduleResults });
+    this.setState({ searchString: searchString, isVisible: true, moduleResults: moduleResults });
   },
 
   onKeydown: function(e) {
@@ -127,14 +128,33 @@ var App = createClass({
         ),
         state.isVisible ?
           h('div', { id: 'search-results' },
-            h('ul', null,
-              items
-            )
+            items.length > 0
+              ? h('ul', null, items)
+              : h(NoResultsMsg, { searchString: state.searchString })
           ) : null
       )
     );
   }
 });
+
+var NoResultsMsg = function(props) {
+  var messages = [
+    h('p', null,
+      "Your search for '" + props.searchString + "' produced the following list of results: ",
+      h('code', null, '[]'),
+      "."
+    ),
+    h('p', null,
+      h('code', null, 'Nothing'),
+      " matches your query for '" + props.searchString + "'.",
+    ),
+    h('p', null,
+      h('code', null, 'Left "no matches for \'' + props.searchString + '\'" :: Either String (NonEmpty SearchResult)'),
+    )
+  ];
+
+  return messages[(props.searchString || 'a').charCodeAt(0) % messages.length];
+};
 
 var ResultsInModule = function(props) {
   return h('li', null,

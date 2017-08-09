@@ -327,8 +327,11 @@ div#style-menu-holder {
   list-style: none;
 }
 
-#search-results > ul > li {
+#search-results > ul > li, #search-results > p {
   padding: 0.5em 1em;
+  margin: 0;
+}
+#search-results > ul > li {
   border-bottom: 1px solid #b2d5fb;
 }
 
