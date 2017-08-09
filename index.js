@@ -48,6 +48,7 @@ var App = createClass({
     self.setState({
       searchString: '',
       isVisible: false,
+      expanded: {},
       moduleResults: []
     });
     loadJSON("doc-index.json", function(data) {
@@ -76,6 +77,10 @@ var App = createClass({
     this.setState({ isVisible: false });
   },
 
+  show: function() {
+    this.setState({ isVisible: true });
+  },
+
   updateResults: function(searchString) {
     var results = this.state.fuse.search(searchString)
 
@@ -102,14 +107,14 @@ var App = createClass({
 
   onKeydown: function(e) {
     if (e.key == 'Escape') {
-      this.setState({ isVisible: false });
+      this.hide();
     }
   },
 
   render: function(props, state) {
     var self = this;
     var items = take(10, state.moduleResults).map(function(resultsInModule) {
-      return h(ResultsInModule, resultsInModule);
+      return self.renderResultsInModule(resultsInModule);
     });
     var stopPropagation = function(e) { e.stopPropagation(); };
     return (
@@ -117,9 +122,8 @@ var App = createClass({
         h('div', { id: 'search-form' },
           h('input', {
             placeholder: "Search in package by name",
-            onFocus: function(e) {
-              self.setState({ isVisible: true });
-            },
+            onFocus: this.show.bind(this),
+            onClick: this.show.bind(this),
             onKeydown: this.onKeydown.bind(this),
             onInput: function(e) {
               self.updateResults(e.target.value);
@@ -137,7 +141,33 @@ var App = createClass({
             )
       )
     );
+  },
+
+  renderResultsInModule: function(resultsInModule) {
+    var items = resultsInModule.items;
+    var moduleName = resultsInModule.module;
+    var showAll = this.state.expanded[moduleName] || items.length <= 10;
+    var visibleItems = showAll ? items : take(8, items);
+
+    var expand = function() {
+      var newExpanded = Object.assign({}, this.state.expanded);
+      newExpanded[moduleName] = true;
+      this.setState({ expanded: newExpanded });
+    }.bind(this);
+
+    return h('li', { class: 'search-module' },
+      h('p', null, moduleName),
+      h('ul', null,
+        visibleItems.map(function(item) { return h(Item, item.item); }),
+        showAll
+          ? null
+          : h('li', { class: 'more-results', onClick: expand },
+              h('a', { href: '#' }, "(show " + (items.length - visibleItems.length) + " more results from this module)")
+            )
+      ),
+    )
   }
+
 });
 
 var IntroMsg = function() {
@@ -163,17 +193,6 @@ var NoResultsMsg = function(props) {
   ];
 
   return messages[(props.searchString || 'a').charCodeAt(0) % messages.length];
-};
-
-var ResultsInModule = function(props) {
-  return h('li', null,
-    h('p', null, props.module),
-    h('ul', null,
-      take(8, props.items).map(function(item) { return h(Item, item.item); })
-    ),
-    props.items.length > 8 ?
-      h('p', null, "(more results on module page)") : null
-  )
 };
 
 var Item = function(props) {

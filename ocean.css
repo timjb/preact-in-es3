@@ -340,22 +340,38 @@ div#style-menu-holder {
   list-style: none;
 }
 
-.search-result > a[href] {
+.search-module > ul > li > a[href] {
   display: block;
   color: inherit;
   padding: 0.25em 0.5em;
 }
 
-.search-result > a[href]:hover {
+.search-module > ul > li > a[href]:hover {
   background: #faf9dc;
 }
 
-.search-result a[href]:hover {
+.search-module a[href]:hover {
   text-decoration: none;
 }
 
 .search-result a a {
   pointer-events: none;
+}
+
+.more-results {
+  color: rgb(78,98,114);
+  position: relative;
+}
+
+.more-results::before {
+  content: "+";
+  display: inline-block;
+  color: #b2d5fb;
+  font-weight: bold;
+  font-size: 1.25em; line-height: inherit;
+  /*margin-left: -1em;*/
+  position: absolute;
+  left: -1em;
 }
 
 /* @end */
