@@ -126,16 +126,25 @@ var App = createClass({
             }
           }),
         ),
-        state.isVisible ?
-          h('div', { id: 'search-results' },
-            items.length > 0
-              ? h('ul', null, items)
-              : h(NoResultsMsg, { searchString: state.searchString })
-          ) : null
+        !state.isVisible
+          ? null
+          : h('div', { id: 'search-results' },
+              state.searchString === ''
+                ? h(IntroMsg)
+                :    items.length == 0
+                      ? h(NoResultsMsg, { searchString: state.searchString })
+                      : h('ul', null, items)
+            )
       )
     );
   }
 });
+
+var IntroMsg = function() {
+  return h('p', null,
+    "You can find any type, constructor, class, function or pattern defined in this package by (approximate) name."
+  );
+};
 
 var NoResultsMsg = function(props) {
   var messages = [
