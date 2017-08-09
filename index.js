@@ -65,9 +65,7 @@ var App = createClass({
       if (console) {
         console.error("could not load 'doc-index.json' for searching", err);
       }
-      self.setState({
-        moduleResults: []
-      });
+      self.setState({ failedLoading: true });
     });
 
     document.addEventListener('mousedown', this.hide.bind(this));
@@ -112,6 +110,8 @@ var App = createClass({
   },
 
   render: function(props, state) {
+    if (state.failedLoading) { return null; }
+
     var self = this;
     var items = take(10, state.moduleResults).map(function(resultsInModule) {
       return self.renderResultsInModule(resultsInModule);
