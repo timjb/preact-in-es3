@@ -366,6 +366,22 @@ div#style-menu-holder {
   pointer-events: none;
 }
 
+.search-result ul.subs {
+  display: inline-block;
+  margin: 0; padding: 0;
+}
+
+.search-result ul.subs li {
+  display: none;
+}
+
+.search-result ul.subs::after {
+  display: inline-block;
+  content: "...";
+  color: rgb(78,98,114);
+  margin: 0 0.25em;
+}
+
 .more-results {
   color: rgb(78,98,114);
   position: relative;
