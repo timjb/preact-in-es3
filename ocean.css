@@ -327,9 +327,21 @@ div#style-menu-holder {
   list-style: none;
 }
 
-#search-results > ul > li, #search-results > p {
+#search-results > ul > li,
+#search-results > p,
+#search-results > table {
   padding: 0.5em 1em;
   margin: 0;
+}
+
+.keyboard-shortcuts th {
+  color: rgb(78,98,114);
+}
+
+.keyboard-shortcuts td:first-child,
+.keyboard-shortcuts th:first-child {
+  text-align: right;
+  padding-right: 1em;
 }
 
 #search-results > ul > li {
@@ -383,7 +395,7 @@ div#style-menu-holder {
 }
 
 .more-results {
-  color: rgb(78,98,114);
+  color: rgb(99, 141, 173);
   position: relative;
 }
 

@@ -171,7 +171,7 @@ var App = createClass({
           ? null
           : h('div', { id: 'search-results' },
               state.searchString === ''
-                ? h(IntroMsg)
+                ? [h(IntroMsg), h(KeyboardShortcuts)]
                 :    items.length == 0
                       ? h(NoResultsMsg, { searchString: state.searchString })
                       : h('ul', null, items)
@@ -207,7 +207,7 @@ var App = createClass({
         showAll
           ? null
           : h('li', { class: 'more-results' },
-              this.actionLink(expand, {}, "(show " + (items.length - visibleItems.length) + " more results from this module)")
+              this.actionLink(expand, {}, "show " + (items.length - visibleItems.length) + " more results from this module")
             )
       ),
     )
@@ -254,17 +254,34 @@ var DocHtml = createClass({
 
 });
 
+var KeyboardShortcuts = function() {
+  return h('table', { class: 'keyboard-shortcuts' },
+    h('tr', null,
+      h('th', null, "Key"),
+      h('th', null, "Shortcut")
+    ),
+    h('tr', null,
+      h('td', null, h('span', { class: 'key' }, "s")),
+      h('td', null, "Open this search box")
+    ),
+    h('tr', null,
+      h('td', null, h('span', { class: 'key' }, "↓")),
+      h('td', null, "Move down in search results")
+    ),
+    h('tr', null,
+      h('td', null, h('span', { class: 'key' }, "↑")),
+      h('td', null, "Move up in search results")
+    ),
+    h('tr', null,
+      h('td', null, h('span', { class: 'key' }, "↵")),
+      h('td', null, "Go to active search result")
+    ),
+  );
+};
+
 var IntroMsg = function() {
   return h('p', null,
-    "You can find any exported type, constructor, class, function or pattern defined in this package by (approximate) name. Press ",
-    h('span', { class: 'key' }, "s"),
-    " to bring up this search box. You can navigate using ",
-    h('span', { class: 'key' }, "↓"),
-    " and ",
-    h('span', { class: 'key' }, "↑"),
-    " and go to an active result by pressing ",
-    h('span', { class: 'key' }, "↵"),
-    "."
+    "You can find any exported type, constructor, class, function or pattern defined in this package by (approximate) name.",
   );
 };
 
