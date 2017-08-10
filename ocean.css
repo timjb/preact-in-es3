@@ -393,15 +393,18 @@ div#style-menu-holder {
   color: #b2d5fb;
   font-weight: bold;
   font-size: 1.25em; line-height: inherit;
-  /*margin-left: -1em;*/
   position: absolute;
   left: -1em;
 }
 
 .key {
+  display: inline-block;
+  font-size: 0.85em;
+  width: 1.2em; line-height: 1.2em;
+  text-align: center;
   background: #b2d5fb;
   border: 1px solid #74a3d6;
-  padding: 0 0.3em;
+  padding: 0;
 }
 
 /* @end */
