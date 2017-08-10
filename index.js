@@ -107,6 +107,7 @@ var App = createClass({
 
   navigateLinks: function(change) {
     var newActiveLinkIndex = Math.max(-1, Math.min(this.linkIndex-1, this.state.activeLinkIndex + change));
+    this.navigatedByKeyboard = true;
     this.setState({ activeLinkIndex: newActiveLinkIndex });
   },
 
@@ -138,6 +139,18 @@ var App = createClass({
     moduleResults.sort(function(a, b) { return a.totalScore - b.totalScore; });
 
     this.setState({ searchString: searchString, isVisible: true, moduleResults: moduleResults });
+  },
+
+  componentDidUpdate: function() {
+    if (this.activeLink && this.navigatedByKeyboard) {
+      var rect = this.activeLink.getClientRects()[0];
+      if (rect.bottom > window.innerHeight) {
+        window.scrollBy(0, 100);
+      } else if (rect.top < 0) {
+        window.scrollBy(0, -100);
+      }
+    }
+    this.navigatedByKeyboard = false;
   },
 
   render: function(props, state) {
@@ -236,6 +249,7 @@ var App = createClass({
     var linkIndex = this.linkIndex;
     if (linkIndex === this.state.activeLinkIndex) {
       attrs['class'] = (attrs['class'] ? attrs['class'] + ' ' : '') + 'active-link';
+      attrs.ref = function (link) { if (link) this.activeLink = link; }.bind(this);
       this.activeLinkAction = action;
     }
     var newAttrs = Object.assign({ 'data-link-index': linkIndex }, attrs);
