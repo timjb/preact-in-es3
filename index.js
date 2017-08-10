@@ -143,11 +143,14 @@ var App = createClass({
     this.linkIndex = 0;
 
     var onMouseOver = function(e) {
-      var target = e.relatedTarget;
-      if (!target) { return; }
-      if (target.hasAttribute('data-link-index')) {
-        var linkIndex = parseInt(target.getAttribute('data-link-index'), 10);
-        this.setState({ activeLinkIndex: linkIndex });
+      var target = e.target;
+      while (target) {
+        if (typeof target.hasAttribute == 'function' && target.hasAttribute('data-link-index')) {
+          var linkIndex = parseInt(target.getAttribute('data-link-index'), 10);
+          this.setState({ activeLinkIndex: linkIndex });
+          break;
+        }
+        target = target.parentNode;
       }
     }.bind(this);
 
@@ -192,7 +195,7 @@ var App = createClass({
     var renderItem = function(item) {
       return h('li', { class: 'search-result' },
         this.navigationLink('#TODO', {},
-          h('div', {dangerouslySetInnerHTML: {__html: item.display_html}})
+          h(DocHtml, { html: item.display_html })
         )
       );
     }.bind(this);
@@ -235,6 +238,18 @@ var App = createClass({
     var args = ['a', newAttrs].concat(children);
     this.linkIndex += 1;
     return h.apply(null, args);
+  }
+
+});
+
+var DocHtml = createClass({
+
+  shouldComponentUpdate: function(newProps) {
+    return this.props.html !== newProps.html;
+  },
+
+  render: function(props) {
+    return h('div', {dangerouslySetInnerHTML: {__html: props.html}});
   }
 
 });
