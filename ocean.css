@@ -311,6 +311,7 @@ div#style-menu-holder {
   display: block;
   box-sizing: border-box;
   width: 100%;
+  padding: 0.1em 0.2em;
 }
 
 #search input:focus {
@@ -332,16 +333,6 @@ div#style-menu-holder {
 #search-results > table {
   padding: 0.5em 1em;
   margin: 0;
-}
-
-.keyboard-shortcuts th {
-  color: rgb(78,98,114);
-}
-
-.keyboard-shortcuts td:first-child,
-.keyboard-shortcuts th:first-child {
-  text-align: right;
-  padding-right: 1em;
 }
 
 #search-results > ul > li {
@@ -409,14 +400,29 @@ div#style-menu-holder {
   left: -1em;
 }
 
+.keyboard-shortcuts {
+  line-height: 1.6em;
+}
+
+.keyboard-shortcuts th {
+  color: rgb(78,98,114);
+}
+
+.keyboard-shortcuts td:first-child,
+.keyboard-shortcuts th:first-child {
+  text-align: right;
+  padding-right: 0.6em;
+}
+
 .key {
   display: inline-block;
-  font-size: 0.85em;
-  width: 1.2em; line-height: 1.2em;
+  font-size: 0.9em;
+  min-width: 0.8em; line-height: 1.2em;
   text-align: center;
   background: #b2d5fb;
   border: 1px solid #74a3d6;
-  padding: 0;
+  padding: 0 0.2em;
+  margin: 0 0.1em;
 }
 
 /* @end */

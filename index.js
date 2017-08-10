@@ -72,12 +72,16 @@ var App = createClass({
     document.addEventListener('mousedown', this.hide.bind(this));
 
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') { self.hide(); }
-
       if (self.state.isVisible) {
-        if (e.key === 'ArrowUp')   { self.navigateLinks(-1); e.preventDefault(); }
-        if (e.key === 'ArrowDown') { self.navigateLinks(+1); e.preventDefault(); }
-        if (e.key === 'Enter' && self.state.activeLinkIndex) {
+        if (e.key === 'Escape') {
+          self.hide();
+        } else if (e.key === 'ArrowUp' || (e.key === 'k' && e.ctrlKey)) {
+          self.navigateLinks(-1);
+          e.preventDefault();
+        } else if (e.key === 'ArrowDown' || (e.key === 'j' && e.ctrlKey)) {
+          self.navigateLinks(+1);
+          e.preventDefault();
+        } else if (e.key === 'Enter' && self.state.activeLinkIndex >= 0) {
           self.followActiveLink();
         }
       }
@@ -265,11 +269,19 @@ var KeyboardShortcuts = function() {
       h('td', null, "Open this search box")
     ),
     h('tr', null,
-      h('td', null, h('span', { class: 'key' }, "↓")),
+      h('td', null,
+        h('span', { class: 'key' }, "↓"), ", ",
+        h('span', { class: 'key' }, "ctrl"), "+",
+        h('span', { class: 'key' }, "j")
+      ),
       h('td', null, "Move down in search results")
     ),
     h('tr', null,
-      h('td', null, h('span', { class: 'key' }, "↑")),
+      h('td', null,
+        h('span', { class: 'key' }, "↑"), ", ",
+        h('span', { class: 'key' }, "ctrl"), "+",
+        h('span', { class: 'key' }, "k")
+      ),
       h('td', null, "Move up in search results")
     ),
     h('tr', null,
