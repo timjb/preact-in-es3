@@ -76,21 +76,19 @@ var App = createClass({
         if (e.key === 'Escape') {
           self.hide();
         } else if (e.key === 'ArrowUp' || (e.key === 'k' && e.ctrlKey)) {
+          e.preventDefault();
           self.navigateLinks(-1);
-          e.preventDefault();
         } else if (e.key === 'ArrowDown' || (e.key === 'j' && e.ctrlKey)) {
-          self.navigateLinks(+1);
           e.preventDefault();
+          self.navigateLinks(+1);
         } else if (e.key === 'Enter' && self.state.activeLinkIndex >= 0) {
           self.followActiveLink();
         }
       }
 
       if (e.key === 's' && e.target.tagName.toLowerCase() !== 'input') {
-        if (self.input) {
-          self.input.focus();
-          e.preventDefault();
-        }
+        e.preventDefault();
+        self.show();
       }
     })
   },
@@ -101,7 +99,16 @@ var App = createClass({
 
   show: function() {
     if (!this.state.isVisible) {
+      this.focusPlease = true;
       this.setState({ isVisible: true, activeLinkIndex: -1 });
+    }
+  },
+
+  toggleVisibility: function() {
+    if (this.state.isVisible) {
+      this.hide();
+    } else {
+      this.show();
     }
   },
 
@@ -142,15 +149,20 @@ var App = createClass({
   },
 
   componentDidUpdate: function() {
-    if (this.activeLink && this.navigatedByKeyboard) {
+    if (this.state.isVisible && this.activeLink && this.navigatedByKeyboard) {
       var rect = this.activeLink.getClientRects()[0];
+      var searchResultsTop = this.searchResults.getClientRects()[0].top;
       if (rect.bottom > window.innerHeight) {
-        window.scrollBy(0, 100);
-      } else if (rect.top < 0) {
-        window.scrollBy(0, -100);
+        this.searchResults.scrollTop += rect.bottom - window.innerHeight + 80;
+      } else if (rect.top < searchResultsTop) {
+        this.searchResults.scrollTop -= searchResultsTop - rect.top + 80;
       }
     }
+    if (this.focusPlease && this.input) {
+      this.input.focus();
+    }
     this.navigatedByKeyboard = false;
+    this.focusPlease = false;
   },
 
   render: function(props, state) {
@@ -158,6 +170,8 @@ var App = createClass({
 
     var self = this;
     this.linkIndex = 0;
+
+    var stopPropagation = function(e) { e.stopPropagation(); };
 
     var onMouseOver = function(e) {
       var target = e.target;
@@ -171,11 +185,18 @@ var App = createClass({
       }
     }.bind(this);
 
+    var onButtonClick = function(e) { e.preventDefault(); self.toggleVisibility(); };
+    var searchButton = h('a',
+      { href: '#', id: 'search-button', onClick: onButtonClick, onMouseDown: stopPropagation },
+      "🔍"
+    );
+
     var items = take(10, state.moduleResults).map(this.renderResultsInModule.bind(this));
-    var stopPropagation = function(e) { e.stopPropagation(); };
+
     return (
-      h('div', { id: 'search', onMouseDown: stopPropagation, onMouseOver: onMouseOver },
-        h('div', { id: 'search-form' },
+      h('div', { id: 'search', class: state.isVisible ? '' : 'hidden' },
+        searchButton,
+        h('div', { id: 'search-form', onMouseDown: stopPropagation },
           h('input', {
             placeholder: "Search in package by name",
             ref: function(input) { self.input = input; },
@@ -184,15 +205,17 @@ var App = createClass({
             onInput: this.updateResults.bind(this)
           }),
         ),
-        !state.isVisible
-          ? null
-          : h('div', { id: 'search-results' },
-              state.searchString === ''
-                ? [h(IntroMsg), h(KeyboardShortcuts)]
-                :    items.length == 0
-                      ? h(NoResultsMsg, { searchString: state.searchString })
-                      : h('ul', null, items)
-            )
+        h('div', {
+          id: 'search-results',
+          ref: function(el) { self.searchResults = el; },
+          onMouseDown: stopPropagation, onMouseOver: onMouseOver
+        },
+          state.searchString === ''
+            ? [h(IntroMsg), h(KeyboardShortcuts)]
+            :    items.length == 0
+                  ? h(NoResultsMsg, { searchString: state.searchString })
+                  : h('ul', null, items)
+        )
       )
     );
   },

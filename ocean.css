@@ -193,7 +193,7 @@ pre {
 
 #content {
   margin: 0 auto;
-  padding: 0 2em 6em;
+  padding: 0 2em 6em 3.5em;
 }
 
 #package-header {
@@ -294,24 +294,48 @@ div#style-menu-holder {
 /* @group Search box */
 
 #search {
-  position: absolute;
-  top: 0; left: 0; right: 0;
+  position: fixed;
+  top: 3.8em; left: 0; bottom: 0;
   z-index: 1000;
-  margin: 0 auto;
+  /*margin: 0 auto;*/
+}
+
+#search-button {
+  display: block;
+  width: 2em;
+  height: 1.9em;
+  background: #faf9dc;
+  font-size: 1.5em; line-height: 1.9em;
+  padding: 0.1em 0 0;
+  text-align: center;
+}
+
+#search-button:hover {
+  text-decoration: none;
+}
+
+#search-form, #search-results {
+  position: absolute; left: 3em;
   width: 36em;
-  background: rgb(78,98,114);
+  box-sizing: border-box;
+  box-shadow: 2px 2px 6px rgb(199, 204, 208);
+}
+
+.hidden #search-form, .hidden #search-results {
+  display: none;
 }
 
 #search-form {
-  padding: 0.5em;
+  top: 0;
 }
 
 #search-form input {
-  font-size: 1.25em;
+  font-size: 1.25em; line-height: 2.3em; height: 2.4em;
   display: block;
   box-sizing: border-box;
   width: 100%;
-  padding: 0.1em 0.2em;
+  padding: 0 0.75em;
+  border: 0.05em solid rgb(151, 179, 202);
 }
 
 #search input:focus {
@@ -319,8 +343,14 @@ div#style-menu-holder {
 }
 
 #search-results {
+  top: 3em;
+  max-height: calc(100% - 3em);
+  box-sizing: border-box;
+  border-width: 0 0.05em 0.05em;
+  border-style: solid;
+  border-color: #b2d5fb;
   background: #e8f3ff;
-  box-shadow: 0 0 10px rgb(78,98,114);
+  overflow-y: scroll;
 }
 
 #search-results > ul {
@@ -622,7 +652,7 @@ div#style-menu-holder {
 
 .subs, .doc {
   /* use this selector for one level of indent */
-  padding-left: 2em;
+  padding-left: 1em;
 }
 
 .warning {
