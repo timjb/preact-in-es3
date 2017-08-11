@@ -283,6 +283,10 @@ var KeyboardShortcuts = function() {
       h('td', null, "Open this search box")
     ),
     h('tr', null,
+      h('td', null, h('span', { class: 'key' }, "esc")),
+      h('td', null, "Close this search box")
+    ),
+    h('tr', null,
       h('td', null,
         h('span', { class: 'key' }, "↓"), ", ",
         h('span', { class: 'key' }, "ctrl"), "+",
