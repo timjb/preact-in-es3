@@ -211,7 +211,7 @@ var App = createClass({
 
     var renderItem = function(item) {
       return h('li', { class: 'search-result' },
-        this.navigationLink('#TODO', {},
+        this.navigationLink(item.link, {},
           h(DocHtml, { html: item.display_html })
         )
       );
