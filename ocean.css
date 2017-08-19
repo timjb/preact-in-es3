@@ -193,7 +193,7 @@ pre {
 
 #content {
   margin: 0 auto;
-  padding: 0 2em 6em 3.5em;
+  padding: 0 2em 6em;
 }
 
 #package-header {
@@ -203,6 +203,7 @@ pre {
   padding: 0.2em;
   position: relative;
   text-align: left;
+  font-size: 125%;
 }
 
 #package-header .caption {
@@ -295,38 +296,15 @@ div#style-menu-holder {
 
 #search {
   position: fixed;
-  top: 3.8em; left: 0; bottom: 0;
-  z-index: 1000;
-  /*margin: 0 auto;*/
-}
-
-#search-button {
-  display: block;
-  width: 2em;
-  height: 1.9em;
-  background: #faf9dc;
-  font-size: 1.5em; line-height: 1.9em;
-  padding: 0.1em 0 0;
-  text-align: center;
-}
-
-#search-button:hover {
-  text-decoration: none;
-}
-
-#search-form, #search-results {
-  position: absolute; left: 3em;
+  top: 3.2em;
   width: 36em;
-  box-sizing: border-box;
+  left: calc(50% - 18em);
+  z-index: 1000;
   box-shadow: 2px 2px 6px rgb(199, 204, 208);
 }
 
-.hidden #search-form, .hidden #search-results {
+#search.hidden {
   display: none;
-}
-
-#search-form {
-  top: 0;
 }
 
 #search-form input {
@@ -652,7 +630,7 @@ div#style-menu-holder {
 
 .subs, .doc {
   /* use this selector for one level of indent */
-  padding-left: 1em;
+  padding-left: 2em;
 }
 
 .warning {

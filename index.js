@@ -37,6 +37,30 @@ function loadJSON(path, success, error) {
 
 // -------------------------------------------------------------------------- //
 
+var PageMenuButton = createClass({
+
+  render: function(props) {
+    function onClick(e) {
+      e.preventDefault();
+      props.onClick();
+    }
+
+    return h('li', null,
+      h('a', { href: '#', onClick: onClick }, props.title)
+    );
+  }
+
+});
+
+function addSearchPageMenuButton(action) {
+  var pageMenu = document.querySelector('#package-header ul.links');
+  var dummy = document.createElement('li');
+  pageMenu.insertBefore(dummy, pageMenu.firstChild);
+  preact.render(h(PageMenuButton, { onClick: action, title: "Search" }), pageMenu, dummy);
+}
+
+// -------------------------------------------------------------------------- //
+
 function take(n, arr) {
   if (arr.length <= n) { return arr; }
   return arr.slice(0, n);
@@ -165,6 +189,10 @@ var App = createClass({
     this.focusPlease = false;
   },
 
+  componentDidMount: function() {
+    addSearchPageMenuButton(this.toggleVisibility.bind(this));
+  },
+
   render: function(props, state) {
     if (state.failedLoading) { return null; }
 
@@ -185,17 +213,10 @@ var App = createClass({
       }
     }.bind(this);
 
-    var onButtonClick = function(e) { e.preventDefault(); self.toggleVisibility(); };
-    var searchButton = h('a',
-      { href: '#', id: 'search-button', onClick: onButtonClick, onMouseDown: stopPropagation },
-      "🔍"
-    );
-
     var items = take(10, state.moduleResults).map(this.renderResultsInModule.bind(this));
 
     return (
       h('div', { id: 'search', class: state.isVisible ? '' : 'hidden' },
-        searchButton,
         h('div', { id: 'search-form', onMouseDown: stopPropagation },
           h('input', {
             placeholder: "Search in package by name",
