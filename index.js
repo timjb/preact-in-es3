@@ -275,8 +275,8 @@ var App = createClass({
   },
 
   navigationLink: function(href, attrs) {
-    var fullAttrs = Object.assign({ href: href }, attrs);
-    var action = function() { window.location.href = href; };
+    var fullAttrs = Object.assign({ href: href, onClick: this.hide.bind(this) }, attrs);
+    var action = function() { window.location.href = href; this.hide(); }.bind(this);
     var args = [fullAttrs, action].concat(Array.prototype.slice.call(arguments, 2));
     return this.menuLink.apply(this, args);
   },
