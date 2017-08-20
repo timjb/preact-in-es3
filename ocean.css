@@ -298,8 +298,8 @@ div#style-menu-holder {
   position: fixed;
   top: 3.2em;
   bottom: 0;
-  left: calc(50% - 18em);
-  width: 36em;
+  left: calc(50% - 22em);
+  width: 44em;
   z-index: 1000;
   pointer-events: none;
 }
