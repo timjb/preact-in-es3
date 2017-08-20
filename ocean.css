@@ -297,14 +297,20 @@ div#style-menu-holder {
 #search {
   position: fixed;
   top: 3.2em;
-  width: 36em;
+  bottom: 0;
   left: calc(50% - 18em);
+  width: 36em;
   z-index: 1000;
-  box-shadow: 2px 2px 6px rgb(199, 204, 208);
+  pointer-events: none;
 }
 
 #search.hidden {
   display: none;
+}
+
+#search-form, #search-results {
+  box-shadow: 2px 2px 6px rgb(199, 204, 208);
+  pointer-events: all;
 }
 
 #search-form input {
@@ -328,7 +334,7 @@ div#style-menu-holder {
   border-style: solid;
   border-color: #b2d5fb;
   background: #e8f3ff;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 #search-results > ul {
